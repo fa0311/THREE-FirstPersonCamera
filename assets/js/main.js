@@ -10,17 +10,14 @@ function main() {
 
     });
 
-    // レンダラーを作成
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas
     });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
 
-    // シーンを作成
     const scene = new THREE.Scene();
 
-    // カメラを作成
     const camera = new THREE.PerspectiveCamera(
         45,
         width / height,
@@ -28,7 +25,6 @@ function main() {
         2000
     );
     camera.position.set(0, 0, 800);
-
 
 
     const geometry = new THREE.BoxGeometry(50, 50, 50);
@@ -39,26 +35,6 @@ function main() {
     const box = new THREE.Mesh(geometry, material);
     scene.add(box);
 
-    /*
-    // ドーナツ
-    const geometry = new THREE.TorusGeometry(300, 100, 64, 100);
-    const material = new THREE.MeshStandardMaterial({
-        color: 0x6699FF,
-        roughness: 0.5
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-    */
-
-    /*
-        // 平行光源
-        const light = new THREE.DirectionalLight(0xffffff);
-        light.intensity = 2;
-        light.position.set(2, 2.5, 1);
-        */
-
-
-
     const light = new THREE.PointLight(0xFFFFFF, 2, 1000, 1.0);
     light.position.set(0, 0, 0);
     scene.add(light);
@@ -66,17 +42,12 @@ function main() {
     view();
 
     function view() {
-
         requestAnimationFrame(view);
-
-
-
         let _euler = new THREE.Euler(0, 0, 0, 'YXZ');
         _euler.setFromQuaternion(camera.quaternion);
         _euler.y -= mousedata.x;
         _euler.x = Math.max(Math.PI / 2 - Math.PI, Math.min(Math.PI / 2 - 0, _euler.x - mousedata.y));
         camera.quaternion.setFromEuler(_euler);
-
 
         if (keydata.up && keydata.right) {
             camera.position.z -= Math.cos(_euler.y - Math.PI / 2.5) * 3;
@@ -103,21 +74,17 @@ function main() {
             camera.position.z += Math.cos(_euler.y - Math.PI / 2) * 3;
             camera.position.x += Math.sin(_euler.y - Math.PI / 2) * 3;
         }
-
         mousedata.update();
 
         light.position.z = camera.position.z;
         light.position.x = camera.position.x;
         light.position.y = camera.position.y;
-
         renderer.render(scene, camera);
     }
 
     canvas.addEventListener("mousemove", function(e) {
         mousedata.x += e.movementX / 1000;
         mousedata.y += e.movementY / 1000;
-        // const obj = scene.getObjectByName("object");
-        // camera.rotation.z = Math.atan2(mouseY, mouseX) + -(Math.PI * 90 / 180);
     });
 
 
